@@ -8,6 +8,8 @@
 </head>
 <body>
 
+    <div class="scroll-indicator"></div>
+
     <header class="menu-principal">
         <nav>
             <ul>
@@ -34,7 +36,7 @@
             <p>
                 <strong>Instituição:</strong> Uninter <br>
                 <strong>Curso:</strong> Analise e desenvolvimento de sistemas<br>
-                <strong>Período:</strong> 2024 - 2025
+                <strong>Data da Matricula:</strong> 29/01/2025
             </p>
             <h3>Idiomas</h3>
             <p>
@@ -72,6 +74,61 @@
             </div>
         </section>
     </main>
+
+    <script>
+        // Scroll indicator
+        window.addEventListener('scroll', () => {
+            const scrollIndicator = document.querySelector('.scroll-indicator');
+            const scrollTop = window.pageYOffset;
+            const docHeight = document.body.offsetHeight - window.innerHeight;
+            const scrollPercent = (scrollTop / docHeight) * 100;
+            scrollIndicator.style.width = scrollPercent + '%';
+        });
+
+        // Smooth scroll for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const href = this.getAttribute('href');
+                const target = document.querySelector(href);
+                console.log('Clicked link:', href, 'Target found:', !!target);
+                if (target) {
+                    // Calculate offset to account for fixed header
+                    const headerHeight = document.querySelector('.menu-principal').offsetHeight;
+                    const targetPosition = target.offsetTop - headerHeight - 20; // 20px extra padding
+                    
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+                } else {
+                    console.error('Target not found for:', href);
+                }
+            });
+        });
+
+        // Add fade-in animation for sections
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.container').forEach(section => {
+            section.style.opacity = '0';
+            section.style.transform = 'translateY(30px)';
+            section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(section);
+        });
+    </script>
 
 </body>
 </html>
